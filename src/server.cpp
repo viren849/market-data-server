@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <cstring>
+#include <sstream>
+#include <unordered_map>
 
 TCPServer::TCPServer(int port)
     : port_(port), server_fd_(-1) {}
@@ -53,16 +55,57 @@ void TCPServer::start() {
 }
 
 void TCPServer::handle_client(int client_fd) {
-    char buffer[256];
+    char buffer[512];
 
     while (true) {
-        ssize_t n = read(client_fd, buffer, sizeof(buffer));
+        ssize_t n = read(client_fd, buffer, sizeof(buffer) - 1);
         if (n <= 0) break;
 
-        // Echo back
-        write(client_fd, buffer, n);
+        buffer[n] = '\0';
+
+        std::string msg(buffer);
+
+        // Example:
+        // "TICK symbol=AAPL price=100.25 volume=10 id=1\n"
+
+        std::istringstream iss(msg);
+        std::string token;
+
+        // First token should be "TICK"
+        iss >> token;
+        if (token != "TICK") {
+            std::cerr << "[WARN] Unknown message: " << msg << std::endl;
+            continue;
+        }
+
+        std::unordered_map<std::string, std::string> fields;
+
+        // Parse key=value pairs
+        while (iss >> token) {
+            auto pos = token.find('=');
+            if (pos == std::string::npos) continue;
+
+            std::string key = token.substr(0, pos);
+            std::string value = token.substr(pos + 1);
+            fields[key] = value;
+        }
+
+        // Extract fields safely
+        std::string symbol = fields["symbol"];
+        double price = std::stod(fields["price"]);
+        int volume = std::stoi(fields["volume"]);
+        int id = std::stoi(fields["id"]);
+
+        // Structured output (server now understands data)
+        std::cout << "[TICK RECEIVED] "
+                  << "symbol=" << symbol
+                  << " price=" << price
+                  << " volume=" << volume
+                  << " id=" << id
+                  << std::endl;
     }
 
     close(client_fd);
 }
+
 
