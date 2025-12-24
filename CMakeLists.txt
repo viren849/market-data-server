@@ -7,3 +7,7 @@ add_executable(market_data_server
     src/main.cpp
     src/server.cpp
 )
+
+add_executable(fake_client
+    clients/fake_client.cpp
+)
