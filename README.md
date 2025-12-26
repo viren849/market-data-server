@@ -416,12 +416,6 @@ Feel free to fork and extend!
 
 ---
 
-## License
-
-MIT License - See LICENSE file for details
-
----
-
 ## Contact & Portfolio
 
 **Author**: Virender Kumar  
@@ -429,7 +423,7 @@ MIT License - See LICENSE file for details
 
 ---
 
-## Next Steps (Future Enhancements)
+## Next Steps (Future Enhancements) (its hard to do)
 
 - [ ] Add Redis for distributed caching
 - [ ] Implement Kafka for event streaming
