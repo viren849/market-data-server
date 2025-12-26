@@ -1,0 +1,13 @@
+type Query {
+    marketData(symbol: String!): Aggregate
+}
+
+type Aggregate {
+    symbol: String
+    open: Float
+    high: Float
+    low: Float
+    close: Float
+    volume: String
+    timestamp: String
+}

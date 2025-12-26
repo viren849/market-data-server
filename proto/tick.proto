@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package marketdata;
+
+option java_package = "com.marketdata.proto";
+option java_multiple_files = true;
+
+
+// Canonical tick schema (single source of truth)
+message Tick {
+  string symbol = 1;
+  double price = 2;
+  int64 volume = 3;
+
+  // Timestamp from exchange (client-provided)
+  int64 exchange_timestamp = 4;
+
+  // Timestamp set by server on ingest
+  int64 ingest_timestamp = 5;
+}

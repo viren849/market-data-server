@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package marketdata;
+
+option java_package = "com.marketdata.proto";
+option java_multiple_files = true;
+
+import "tick.proto";
+
+message Ack {
+  bool success = 1;
+  string message = 2;
+}
+
+service MarketDataService {
+  rpc StreamTicks (stream Tick) returns (Ack);
+}
+  

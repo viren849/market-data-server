@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package marketdata;
+
+// Import canonical Tick
+import "tick.proto";
+
+option java_package = "com.marketdata.proto";
+option java_multiple_files = true;
+
+
+// Simple ACK returned when stream closes
+message Ack {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request a snapshot for a symbol
+message AggregateRequest {
+  string symbol = 1;
+}
+
+// Snapshot of market data
+message Aggregate {
+  string symbol = 1;
+  double open = 2;
+  double high = 3;
+  double low = 4;
+  double close = 5;
+  int64 volume = 6;
+  int64 timestamp = 7;
+}
+
+// Streaming service
+service MarketDataService {
+  rpc StreamTicks (stream Tick) returns (Ack);
+  rpc GetAggregate (AggregateRequest) returns (Aggregate);
+  rpc StreamAggregates (AggregateRequest) returns (stream Aggregate);
+}
